@@ -2,24 +2,6 @@ const form = document.getElementById('form');
 const table = document.getElementById('result-table');
 const error_div = document.getElementById('error_div');
 
-function showError(msg, delay){
-    error_div.innerText= msg;
-
-    setTimeout( function(){
-        error_div.innerText="";
-    }, delay);
-}
-
-let x_values= [];
-
-document.querySelectorAll(".x_val").forEach(function(button){
-    button.addEventListener("click", handler)
-})
-
-function handler(event){
-    x_values.push(event.target.value);
-}
-
 form.addEventListener('submit', function(event){
     event.preventDefault();
 
@@ -51,3 +33,21 @@ form.addEventListener('submit', function(event){
     }
 
 })
+
+function showError(msg, delay){
+    error_div.innerText= msg;
+
+    setTimeout( function(){
+        error_div.innerText="";
+    }, delay);
+}
+
+let x_values= [];
+
+document.querySelectorAll(".x_val").forEach(function(button){
+    button.addEventListener("click", handler)
+})
+
+function handler(event){
+    x_values.push(event.target.value);
+}
