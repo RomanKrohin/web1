@@ -21,18 +21,23 @@
     border-collapse: collapse;
   }
   
-  th, td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ccc;
+  #slider-value::before{
+    content: "x: ";
+    font-weight: bold;
   }
   
   th {
     background-color: #e6e6e6;
     color: #333;
   }
+
+  th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+  }
   
-  form {
+  #form {
     padding: 20px;
     background-color: #fff;
     border: 1px solid #ccc;
