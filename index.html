@@ -24,20 +24,47 @@
 
                         <label for="x_field">x:</label>
                         <br>
-                        <button class="x_val" type="button" name="x_value" value="-2">-2</button>
-                        <button class="x_val" type="button" name="x_value" value="-1.5">-1.5</button>
-                        <button class="x_val" type="button" name="x_value" value="-1">-1</button>
-                        <button class="x_val" type="button" name="x_value" value="-0.5">-0.5</button>
-                        <button class="x_val" type="button" name="x_value" value="0">0</button>
-                        <button class="x_val" type="button" name="x_value" value="0.5">0.5</button>
-                        <button class="x_val" type="button" name="x_value" value="1">1</button>
-                        <button class="x_val" type="button" name="x_value" value="1.5">1.5</button>
-                        <button class="x_val" type="button" name="x_value" value="2">2</button>
-
+                        <label>
+                            <input type="checkbox" name="x_value" value="-2" class="x_val">
+                            -2
+                        </label>
+                        <label>
+                            <input type="checkbox" name="x_value" value="-1.5" class="x_val">
+                            -1.5
+                        </label>
+                        <label>
+                            <input type="checkbox" name="x_value" value="-1" class="x_val">
+                            -1
+                        </label>
+                        <label>
+                            <input type="checkbox" name="x_value" value="-0.5" class="x_val">
+                            -0.5
+                        </label>
+                        <label>
+                            <input type="checkbox" name="x_value" value="0" class="x_val">
+                            0
+                        </label>
+                        <label>
+                            <input type="checkbox" name="x_value" value="0.5" class="x_val">
+                            0.5
+                        </label>
+                        <label>
+                            <input type="checkbox" name="x_value" value="1" class="x_val">
+                            1
+                        </label>
+                        <label>
+                            <input type="checkbox" name="x_value" value="1.5" class="x_val">
+                            1.5
+                        </label>
+                        <label>
+                            <input type="checkbox" name="x_value" value="2" class="x_val">
+                            2
+                        </label>
+                        
                         <br>
-                        <input type="text" placeholder="y" name="y_field" required>
+                        <input type="text" placeholder="y" name="y_field" maxlength="10" required>
                         <br>
-                        <input type="text" placeholder="R" name="R_field" required>
+                        <input type="text" placeholder="R" name="R_field" maxlength="10" required>
                         <br>
                         <button class="submitBtn" name="submit" type="submit">Send</button>
                         </form>
@@ -51,6 +78,8 @@
                         <th width="17%">y</th>
                         <th width="17%">R</th>
                         <th width="17%">result</th>
+                        <th width="17%">executetime</th>
+                        <th width="17%">time</th>
                     </table>
                 </th>
             </tr>

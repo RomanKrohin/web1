@@ -8,15 +8,15 @@
 
     function validateData($x, $y, $R){
 
-        if ($x>0 && $y>0 && $y<-2*$x+$R && $x<$R/2){
+        if ($x>=0 && $y>=0 && $y<-2*$x+$R && $x<$R/2){
             return true;
         }
 
-        if ($x<0 && $x>-$R/2 && $y<0 && $y>-R){
+        if ($x<=0 && $x>-$R/2 && $y<=0 && $y>-R){
             return true;
         }
 
-        if ($x>-$R && $x<0 && $y>0 && $y<$R && sqrt($x**2+$y**2)<$R){
+        if ($x>-$R && $x<=0 && $y>=0 && $y<$R && sqrt($x**2+$y**2)<$R){
             return true;
         }
 
