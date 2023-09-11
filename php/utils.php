@@ -1,6 +1,6 @@
 <?php
     function privioslyValidateData($x, $y, $R){
-        if ($x >=-2 && $x <=2 && $y >-3 && $y<5 && $R>1 && $R<4){
+        if ($x >=-2 && $x <=2 && $y >-3 && $y<5 && $R>1 && $R<4){    
             return true;
         }
         return false;

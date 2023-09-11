@@ -1,8 +1,8 @@
 <?php
     require "utils.php";
-    $x= floatval($_POST["x_field"]);
-    $y= floatval($_POST["y_field"]);
-    $R= floatval($_POST["R_field"]);
+    $x= floatval($_GET["x_field"]);
+    $y= floatval($_GET["y_field"]);
+    $R= floatval($_GET["R_field"]);
 
     if (privioslyValidateData($x, $y, $R)){
         $result=validateData($x, $y, $R);
