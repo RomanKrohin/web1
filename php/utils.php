@@ -12,7 +12,7 @@
             return true;
         }
 
-        if ($x<=0 && $x>-$R/2 && $y<=0 && $y>-R){
+        if ($x<=0 && $x>-$R/2 && $y<=0 && $y>-$R){
             return true;
         }
 

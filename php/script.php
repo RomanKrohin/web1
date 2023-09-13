@@ -1,9 +1,9 @@
 <?php
     require "utils.php";
     $initial_time = microtime(true);
-    $x= floatval($_GET["x_field"]);
-    $y= floatval($_GET["y_field"]);
-    $R= floatval($_GET["R_field"]);
+    $x= number_format(2, floatval($_GET["x_field"]));
+    $y= number_format(2, floatval($_GET["y_field"]));
+    $R= number_format(2, floatval($_GET["R_field"]));
     $executionTime = $initial_time - $_SERVER['REQUEST_TIME'];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
