@@ -17,8 +17,19 @@ window.addEventListener('load', function() {
     if (localStorage.getItem('tableData')) {
       table.innerHTML= JSON.parse(localStorage.getItem('tableData'));
     }
-  });
+    if (localStorage.getItem('y_value')) {
+        document.getElementById('y_field').value = localStorage.getItem('y_value');
+    }
+    if (localStorage.getItem('R_value')) {
+        document.getElementById('R_field').value = localStorage.getItem('R_value');
+    } 
+});
   
+form.addEventListener('input', function(){
+    const formData = new FormData(form);
+    localStorage.setItem('y_value', formData.get('y_field'));
+    localStorage.setItem('R_value', formData.get('R_field'));
+});
 
 document.querySelectorAll(".x_val").forEach(function(button){
     button.addEventListener("click", handler);
@@ -44,7 +55,7 @@ form.addEventListener('submit', function(event){
     if (x_values.size == 0 || y == null || R == null) {
         showError("Check fields", 3000);
     }
-
+ 
     for (const value of x_values){
         formData.append('x_field', value);
         const queryString = new URLSearchParams(formData).toString();
