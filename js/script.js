@@ -1,106 +1,172 @@
-const form = document.getElementById('form');
-const table = document.getElementById('result-table');
-const error_div = document.getElementById('error_div');
-const checkbox = document.getElementById('checkbox');
+function sendDataToPHP(x, y, R) {
+    const url = `./php/script.php?x=${encodeURIComponent(x)}&y=${encodeURIComponent(y)}&R=${encodeURIComponent(R)}`;
+    console.log(url);
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => response.json())
+        .then(result => {
+            // Вывод результатов в таблицу
+            addToResultTable(x, y, R, result);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }    
+function addToResultTable(x, y, R, result) {
+    const table = document.getElementById('result-table');
 
-function showError(msg, delay){
-    error_div.innerText = msg;
+    const row = table.insertRow(-1);
+    const xCell = row.insertCell(0);
+    const yCell = row.insertCell(1);
+    const RCell = row.insertCell(2);
+    const resultCell = row.insertCell(3);
+    const timeCell = row.insertCell(4);
+    const executeTimeCell = row.insertCell(5);
 
-    setTimeout(function(){
-        error_div.innerText = "";
-    }, delay);
+    xCell.textContent = x;
+    yCell.textContent = y;
+    RCell.textContent = R;
+    resultCell.textContent = result.collision;
+    timeCell.textContent = `${parseFloat(result.exectime).toFixed(2)} s`;
+    executeTimeCell.textContent= getCurrentTime();
+
+    saveToLocalStorage();
 }
 
-const x_values = new Set();
-
-window.addEventListener('load', function() {
-    if (localStorage.getItem('tableData')) {
-      table.innerHTML= JSON.parse(localStorage.getItem('tableData'));
-    }
-    if (localStorage.getItem('y_value')) {
-        document.getElementById('y_field').value = localStorage.getItem('y_value');
-    }
-    if (localStorage.getItem('R_value')) {
-        document.getElementById('R_field').value = localStorage.getItem('R_value');
-    } 
-});
-  
-form.addEventListener('input', function(){
-    const formData = new FormData(form);
-    localStorage.setItem('y_value', formData.get('y_field'));
-    localStorage.setItem('R_value', formData.get('R_field'));
-});
-
-document.querySelectorAll(".x_val").forEach(function(button){
-    button.addEventListener("click", handler);
-});
-
-function handler(event){
-    const value = event.target.value;
-
-    if (x_values.has(value)) {
-        x_values.delete(value);
-    } else {
-        x_values.add(value);
-    }
+function getCurrentTime() {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
 }
 
-form.addEventListener('submit', function(event){
-    event.preventDefault();
+function saveToLocalStorage() {
+    const formData = new FormData(document.getElementById('form'));
+    const table = document.getElementById('result-table');
+    const serializedData = JSON.stringify(Object.fromEntries(formData));
+    localStorage.setItem('formValues', serializedData);
 
-    const formData = new FormData(form);
-    const y = formData.get('y_field');
-    const R = formData.get('R_field');
-
-    if (x_values.size == 0 || y == null || R == null) {
-        showError("Check fields", 3000);
+    const tableData = [];
+    for (let i = 1; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        const rowData = {
+            x: row.cells[0].textContent,
+            y: row.cells[1].textContent,
+            R: row.cells[2].textContent,
+            collision: row.cells[3].textContent,
+            exectime: row.cells[4].textContent
+        };
+        tableData.push(rowData);
     }
- 
-    for (const value of x_values){
-        formData.append('x_field', value);
-        const queryString = new URLSearchParams(formData).toString();
-        const url = `php/script.php?${queryString}`;
-        console.log(value);
-        if (value >= -2 && value <= 2 && y > -3 && y < 5 && R > 1 && R < 4){
-            fetch(url, {
-                method: 'GET'
-            })
-            .then(response => response.json())
-            .then(data => {
-                const curTime = new Date().toLocaleString("ru-RU", {timeZone: "Europe/Moscow"});
-                const content = `<tr>
-                                    <td>${value}</td>
-                                    <td>${y}</td>
-                                    <td>${R}</td>
-                                    <td>${data.collision}</td>
-                                    <td>${parseFloat(data.exectime).toFixed(2)}</td>
-                                    <td>${curTime}</td>
-                                </tr>`;
-                table.innerHTML += content;
+    const serializedTableData = JSON.stringify(tableData);
+    localStorage.setItem('tableData', serializedTableData);
+}
 
-                localStorage.setItem('tableData', JSON.stringify(table.innerHTML));
-            }); 
-        }  
-        else {
-            if (value<= -2){
-                showError("x need be >=-2", 3000);
+function loadFromLocalStorage() {
+    const serializedData = localStorage.getItem('formValues');
+    const table = document.getElementById('result-table');
+    const tableData = JSON.parse((localStorage.getItem('tableData')));
+
+    if (serializedData && tableData) {
+        try {
+            const formData = JSON.parse(serializedData);
+            const form = document.getElementById('form');
+
+            for (const [name, value] of Object.entries(formData)) {
+                const input = form.elements[name];
+                if (input) {
+                    if (input.type === 'checkbox') {
+                        input.checked = value === 'on';
+                    } else {
+                        input.value = value;
+                    }
+                }
             }
-            if (value<= 2){
-                showError("x need be <=2", 3000);
+
+            for (const rowData of tableData) {
+                const row = table.insertRow(-1);
+                const xCell = row.insertCell(0);
+                const yCell = row.insertCell(1);
+                const RCell = row.insertCell(2);
+                const resultCell = row.insertCell(3);
+                const timeCell = row.insertCell(4);
+                const executeTimeCell = row.insertCell(5);
+
+                xCell.textContent = rowData.x;
+                yCell.textContent = rowData.y;
+                RCell.textContent = rowData.R;
+                resultCell.textContent = rowData.collision;
+                timeCell.textContent = rowData.exectime;
+                executeTimeCell.textContent = getCurrentTime();
             }
-            if (y < -3){
-                showError("y need be >-3", 3000);
-            }
-            if (y > 5){
-                showError("y  need be <5", 3000);
-            }
-            if (R > 4){
-                showError("R need be <4", 3000);
-            }
-            if (R < 1){
-                showError("R  need be >1", 3000);
-            }
+        } catch (error) {
+            console.error('Error parsing JSON data:', error);
         }
     }
-    
+}
+
+
+function validateValues(y, R) {
+    if (isNaN(y) || isNaN(R)) {
+        showError('Please enter numeric values for x, y, and R');
+        return false;
+    }
+    if (y < -3){
+        showError("y need be >-3", 3000);
+        return false;
+    }
+    if (y > 5){
+        showError("y  need be <5", 3000);
+        return false;
+    }
+    if (R > 4){
+        showError("R need be <4", 3000);
+        return false;
+    }
+    if (R < 1){
+        showError("R  need be >1", 3000);
+        return false;
+    }
+
+    return true;
+}
+
+function showError(message) {
+    const errorDiv = document.getElementById('error_div');
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+    setTimeout(function () {
+        errorDiv.style.display = 'none';
+    }, 3000);
+}
+
+document.getElementById('form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const xCheckboxes = document.querySelectorAll('.x_val');
+    const y = document.querySelector('input[name="y_field"]').value;
+    const R = document.querySelector('input[name="R_field"]').value;
+
+    if (!validateValues(y, R)) {
+        return;
+    }
+
+    for (const checkbox of xCheckboxes) {
+        if (checkbox.checked) {
+            const x = checkbox.value;
+            sendDataToPHP(parseFloat(x), parseFloat(y), parseFloat(R));
+        }
+    }
+
+    saveToLocalStorage();
+});
+
+window.addEventListener('load', function () {
+    loadFromLocalStorage();
 });
